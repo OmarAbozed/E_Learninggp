@@ -13,7 +13,7 @@ const Classify=mongoose.model("classify",ClassifySchema)
 
 function ValidationCreateClassify(obj){
     const schema=Joi.object({
-        username:Joi.string().min(1).max(255).required(),
+        name:Joi.string().min(1).max(255).required(),
     })
     return schema.validate(obj)
 }
