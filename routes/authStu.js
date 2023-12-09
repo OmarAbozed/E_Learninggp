@@ -16,8 +16,9 @@ const ejs = require('ejs');
  *  @access  public
  */
 
-router.post("/register",asyncHandler(async(req,res)=>{
-    const{ error }=ValidationRegisterStudnet(req.body);
+router.post("/register",async(req,res)=>{
+    try {
+        const{ error }=ValidationRegisterStudnet(req.body);
     if(error){
         return res.status(400).json(error.details[0].message)
     }
@@ -69,7 +70,11 @@ router.post("/register",asyncHandler(async(req,res)=>{
     const {password,...other}=result._doc;
     res.status(200).json({...other});
 
-}));
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({message:"Error 500"})
+    }
+});
 
 /**
  *  @desc    login student

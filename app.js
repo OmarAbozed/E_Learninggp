@@ -2,6 +2,7 @@ const express=require("express");
 const ConnectingTodatabase = require("./config/db");
 require("dotenv").config();
 const path  = require('path');
+var logger = require("morgan");
 
 const app=express();
 
@@ -22,6 +23,7 @@ app.set("views",path.join(__dirname,"views"))
 app.set("view engine","ejs")
 app.use(express.json());
 app.use("/static",express.static(path.join(__dirname,"public")))
+app.use(logger("dev"));
 
 
 app.use("/api/courses",coursesPath);
