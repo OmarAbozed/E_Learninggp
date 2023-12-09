@@ -13,6 +13,7 @@ const AuthInstr=require("./routes/authInstractor");
 const studentPath=require("./routes/student")
 const instractorPath=require("./routes/instractor")
 const verifypath = require('./routes/verifyStudent');
+const classifypath = require('./routes/classify');
 
 //connecting to database
 ConnectingTodatabase();
@@ -29,6 +30,7 @@ app.use("/api/authInstractour",AuthInstr);
 app.use("/api/student",studentPath)
 app.use("/api/instractor",instractorPath)
 app.use("/api/verify",verifypath)
+app.use("/api/classify",classifypath)
 
 
 

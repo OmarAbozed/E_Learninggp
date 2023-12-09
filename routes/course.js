@@ -13,7 +13,7 @@ const{Courses,ValidationCreateCoures, ValidationUpdateCoures}=require("../models
  */
 
 router.get("/",asynchandler(async(req,res)=>{
-    const courses=await Courses.find({price:{$nin:1099}});
+    const courses=await Courses.find(req.body);
     res.status(200).json(courses)
 }))
 
