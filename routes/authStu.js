@@ -39,7 +39,7 @@ router.post("/register",async(req,res)=>{
         image:req.body.image,
     });
     const emailtemplate=fs.readFileSync(
-        "../E_learning/public/mail-template/index.ejs",
+        path.join(__dirname,"../public/mail-template/index.ejs",),
         "utf8"
     )
     const verifytoken=jwt.sign({email:student.email},process.env.VERIFY_SECRIT_KEY,{expiresIn:"5m"})
