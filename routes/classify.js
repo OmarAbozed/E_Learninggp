@@ -12,7 +12,7 @@ const {Classify,ValidationCreateClassify,ValidationUpdateClassify} = require('..
  */
 
 router.get("/",asynchandler(async(req,res)=>{
-    const classify=await Classify.find({price:{$nin:1099}});
+    const classify=await Classify.find();
     res.status(200).json(classify)
 }))
 
