@@ -27,7 +27,6 @@ const CoursesSchema=new mongoose.Schema({
     },
     contint:{
         type:String,
-        
         minLength:1
     },
     instractor:{
