@@ -45,7 +45,7 @@ function ValidationCreateCoures(obj){
 const schema=Joi.object({
     title:Joi.string().trim().required().min(3),
     price:Joi.number().min(1).required(),
-    field:Joi.string().min(10).max(100),
+    field:Joi.string().min(1).max(100),
     contint:Joi.string().min(1),
     instractor: Joi.string().required(),
 })
