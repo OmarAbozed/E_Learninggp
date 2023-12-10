@@ -3,6 +3,7 @@ const mongoose=require("mongoose");
 // const ConnectingTodatabase = require("./config/db");
 require("dotenv").config();
 const path  = require('path');
+const cors = require('cors');
 var logger = require("morgan");
 
 mongoose.connect(process.env.MONGO_URI)
