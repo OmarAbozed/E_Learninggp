@@ -1,9 +1,13 @@
 const express=require("express");
-const ConnectingTodatabase = require("./config/db");
+const mongoose=require("mongoose");
+// const ConnectingTodatabase = require("./config/db");
 require("dotenv").config();
 const path  = require('path');
 var logger = require("morgan");
 
+mongoose.connect(process.env.MONGO_URI)
+.then(()=>console.log("Connecting To DataBase In Mongoose"))
+.catch((error)=>console.log("Filed To Connecting DataBase"))
 const app=express();
 
 
@@ -16,8 +20,13 @@ const instractorPath=require("./routes/instractor")
 const verifypath = require('./routes/verifyStudent');
 const classifypath = require('./routes/classify');
 
-//connecting to database
-ConnectingTodatabase();
+app.use(
+    cors({
+    origin: "*",
+    credentials: true,
+    })
+);
+
 
 app.set("views",path.join(__dirname,"views"))
 app.set("view engine","ejs")

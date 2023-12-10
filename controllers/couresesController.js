@@ -40,24 +40,29 @@ function getCourseByID(){
  *  @access  public  that by praivt after some time
  */
 
-function postCourses(){
-    asynchandler(async(req,res)=>{
-        const { error }=ValidationCreateCoures(req.body);
-        if(error){
-            return res.status(400).json({massage:error.details[0].message})
-        }
-        const course=await new Courses({
-            title:req.body.title,
-            price:req.body.price,
-            field:req.body.field,
-            contint:req.body.contint
-        })
-    
-        const result =await course.save();
-        res.status(200).json(result)
-    })
-}
-
+async function postCourses(req, res) {
+    console.log("flag1");
+    try {
+    console.log("flag2");
+    const { error } = ValidationCreateCoures(req.body);
+    if (error) {
+        return res.status(400).json({ massage: error.details[0].message });
+    }
+    const course = new Courses({
+        title: req.body.title,
+        price: req.body.price,
+        field: req.body.field,
+        contint: req.body.contint,
+        instractor:req.body.instractor
+    });
+  
+    await course.save();
+    res.status(200).json(course);
+    } catch (error) {
+        console.log(error)
+      res.status(500).json({ message: "error :)" });
+    }
+  }
 /**
  *  @desc    update  Coureses
  *  @route   /api/coureses
