@@ -59,7 +59,7 @@ router.post("/register",async(req,res)=>{
     },
     });
     let message = {
-    from: "Online University",//project name
+    from: "Online University",
     to: req.body.email,
     subject: "Welcome to The Online University - Confirm Your Account ",//project name
     html: modifiedEmailTemplate,

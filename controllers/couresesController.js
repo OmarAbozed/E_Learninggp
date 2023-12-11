@@ -7,7 +7,6 @@ const{Courses,ValidationCreateCoures, ValidationUpdateCoures}=require("../models
  *  @method  GET
  *  @access  public
  */
-
 function getAllCoureses(){
     asyncHandler(async(req,res)=>{
         const courses=await Courses.find(req.body);
