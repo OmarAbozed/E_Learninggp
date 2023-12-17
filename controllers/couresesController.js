@@ -7,7 +7,7 @@ const{Courses,ValidationCreateCoures, ValidationUpdateCoures}=require("../models
  *  @method  GET
  *  @access  public
  */
-function getAllCoureses(){
+function getAllCoureses(req,res){
     try {
     async(req,res)=>{
         const courses=await Courses.find(req.body);
@@ -26,7 +26,7 @@ function getAllCoureses(){
  *  @access  public
  */
 
-function getCourseByID(){
+function getCourseByID(req,res){
     try {
         async(req,res)=>{
             const Course=await Courses.findById(req.params.id)
@@ -78,7 +78,7 @@ async function postCourses(req, res) {
  *  @access  public  that by praivt after some time
  */
 
-function putCoureses(){
+function putCoureses(req,res){
     try {
         async(req,res)=>{
             const { error }=ValidationUpdateCoures(req.body);
@@ -108,7 +108,7 @@ function putCoureses(){
  *  @access  public  that by praivt after some time
  */
 
-function deleteCourses(){
+function deleteCourses(req,res){
     try {
         async(req,res)=>{
             const course=await Courses.findById(req.params.id);
