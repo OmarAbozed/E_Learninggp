@@ -39,6 +39,10 @@ const StudentSchema=new mongoose.Schema({
     verified:{
         type:Boolean,
         default:0
+    },
+    verifyBy:{
+        type:String,
+      //enum:['LINK','OTP']
     }
     
 
@@ -54,7 +58,8 @@ function ValidationRegisterStudnet(obj){
         email:Joi.string().trim().min(5).max(50).required().email(),
         password:Joi.string().min(2).required(),
         phone:Joi.string().min(11).max(11).required(),
-        image:Joi.string()
+        image:Joi.string(),
+        verifyBy:Joi.required(),
         
     })
     return schema.validate(obj)

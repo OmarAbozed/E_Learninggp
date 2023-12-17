@@ -8,6 +8,7 @@ const nodemailer =  require('nodemailer');
 const path = require('path');
 const fs = require('fs');
 const ejs = require('ejs');
+const {OTP} = require('../models/Otp');
 
 /**
  *  @desc    register new student
@@ -17,6 +18,7 @@ const ejs = require('ejs');
  */
 
 router.post("/register",async(req,res)=>{
+    console.log(req.body)
     try {
         const{ error }=ValidationRegisterStudnet(req.body);
     if(error){
@@ -37,34 +39,74 @@ router.post("/register",async(req,res)=>{
         password:req.body.password,
         phone:req.body.phone,
         image:req.body.image,
+        verifyBy:req.body.verifyBy
     });
-    const emailtemplate=fs.readFileSync(
-        path.join(__dirname,"../public/mail-template/index.ejs",),
-        "utf8"
-    )
-    const verifytoken=jwt.sign({email:student.email},process.env.VERIFY_SECRIT_KEY,{expiresIn:"5m"})
-    const data={
-        message:`${verifytoken}`
+    if(req.body.verifyBy=='LINK'){
+        const emailtemplate=fs.readFileSync(
+            path.join(__dirname,"../public/mail-template/index.ejs",),
+            "utf8"
+        )
+        const verifytoken=jwt.sign({email:student.email},process.env.VERIFY_SECRIT_KEY,{expiresIn:"5m"})
+        const data={
+            message:`${verifytoken}`
+    
+        }
+        const modifiedEmailTemplate = ejs.render(emailtemplate, data);
+        let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        service: "Gmail",
+        port: 587,
+        secure: false,
+        auth: {
+            user: process.env.NODEMAILER_USER,
+            pass: process.env.NODEMAILER_PASSWORD,
+        },
+        });
+        let message = {
+        from: "Online University",
+        to: req.body.email,
+        subject: "Welcome to The Online University - Confirm Your Account ",//project name
+        html: modifiedEmailTemplate,
+        };
+        await transporter.sendMail(message);
+    }else{
+        await OTP.deleteMany({
+            email:student.email
+        })
+        let Otp=Math.floor(1000+Math.random()*9000);
+        let start=new Date();
+        start.setMinutes(start.getMinutes());
+        let end=new Date();
+        end.setMinutes(end.getMinutes()+5);
+        let transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            service: "Gmail",
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.NODEMAILER_USER,
+                pass: process.env.NODEMAILER_PASSWORD,
+            },
+            });
+            let message = {
+            from: "Online University",
+            to: req.body.email,
+            subject: "Welcome to The Online University - Confirm Your Account ",//project name
+            text: `Your Verification code is ${Otp}, Please don't share it with anyone, this code will expire in 5 minutes`,
+            html: `<p>Your Verification code is<br><h1>${Otp}</h1><br>Please don't share it with anyone.<br>this code will expire in 5 minutes`,
+            };
+            await transporter.sendMail(message);
 
+
+        let OtpObj=new OTP({
+            code:await bcrypt.hash(String(Otp),10),
+            email:student.email,
+            createdat:Number(start),
+            expirat:Number(end)
+        })
+        await OtpObj.save()
+        
     }
-    const modifiedEmailTemplate = ejs.render(emailtemplate, data);
-    let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    service: "Gmail",
-    port: 587,
-    secure: false,
-    auth: {
-        user: process.env.NODEMAILER_USER,
-        pass: process.env.NODEMAILER_PASSWORD,
-    },
-    });
-    let message = {
-    from: "Online University",
-    to: req.body.email,
-    subject: "Welcome to The Online University - Confirm Your Account ",//project name
-    html: modifiedEmailTemplate,
-    };
-    await transporter.sendMail(message);
     const result=await student.save();
 
     const {password,...other}=result._doc;
