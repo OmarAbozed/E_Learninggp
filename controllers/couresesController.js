@@ -8,11 +8,16 @@ const{Courses,ValidationCreateCoures, ValidationUpdateCoures}=require("../models
  *  @access  public
  */
 function getAllCoureses(){
-    asyncHandler(async(req,res)=>{
+    try {
+    async(req,res)=>{
         const courses=await Courses.find(req.body);
         res.status(200).json(courses)
-    })
-}
+    }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "error :)" });
+    
+}}
 
 /**
  *  @desc    Get Coureses By ID
@@ -22,14 +27,20 @@ function getAllCoureses(){
  */
 
 function getCourseByID(){
-    asynchandler(async(req,res)=>{
-        const Course=await Courses.findById(req.params.id)
-        if(Course){
-            res.status(200).json(Course)
-        }else{
-            res.status(404).json({massage:"The Courese Not Found"})
+    try {
+        async(req,res)=>{
+            const Course=await Courses.findById(req.params.id)
+            if(Course){
+                res.status(200).json(Course)
+            }else{
+                res.status(404).json({massage:"The Courese Not Found"})
+            }
         }
-    })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "error :)" });
+    }
+    
 }
 
 /**
@@ -68,21 +79,26 @@ async function postCourses(req, res) {
  */
 
 function putCoureses(){
-    asynchandler(async(req,res)=>{
-        const { error }=ValidationUpdateCoures(req.body);
-        if(error){
-            return res.status(400).json({massage:error.details[0].massage})
-        }
-        const updatecourse=await Courses.findByIdAndUpdate(req.params.id,{
-            $set:{
-                title:req.body.title,
-                price:req.body.price,
-                field:req.body.field,
-                contint:req.body.contint
+    try {
+        async(req,res)=>{
+            const { error }=ValidationUpdateCoures(req.body);
+            if(error){
+                return res.status(400).json({massage:error.details[0].massage})
             }
-        },{new:true})
-        res.status(200).json(updatecourse);
-    })
+            const updatecourse=await Courses.findByIdAndUpdate(req.params.id,{
+                $set:{
+                    title:req.body.title,
+                    price:req.body.price,
+                    field:req.body.field,
+                    contint:req.body.contint
+                }
+            },{new:true})
+            res.status(200).json(updatecourse);
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "error :)" });
+    }
 }
 
 /**
@@ -93,16 +109,21 @@ function putCoureses(){
  */
 
 function deleteCourses(){
-    asynchandler(async(req,res)=>{
-        const course=await Courses.findById(req.params.id);
-        if(course){
-            await Courses.findByIdAndDelete(req.params.id)
-            res.status(200).json({massage:"Coures Is Deleted"})
-        }else{
-            res.status(404).json({massage:"Not Founded"})
+    try {
+        async(req,res)=>{
+            const course=await Courses.findById(req.params.id);
+            if(course){
+                await Courses.findByIdAndDelete(req.params.id)
+                res.status(200).json({massage:"Coures Is Deleted"})
+            }else{
+                res.status(404).json({massage:"Not Founded"})
+            }
+        
         }
-    
-    })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "error :)" });
+    }
 }
 
 
